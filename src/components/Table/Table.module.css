@@ -1,0 +1,19 @@
+.divMain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 100vh;
+  height: 100vh;
+}
+
+.divUnit {
+  width: 19%;
+  background: rgb(226, 226, 226);
+  box-sizing: border-box;
+  height: 20%;
+  margin: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,38 @@
+.mainDiv {
+  display: flex;
+}
+
+.controlsDiv {
+  margin-top: 10px;
+}
+
+.input {
+  width: 50px;
+}
+
+.firstControlDiv {
+  width: 100%;
+}
+
+.buttonControls {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.reportbuttonControls {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.reportDiv {
+  margin-top: 20px;
+}
+
+.reportSpan {
+  margin-right: 10px;
+}
+.reportDetail {
+  margin: 5px;
+}
