@@ -29,6 +29,7 @@ It is required that the first command to the robot is a `PLACE` command, after t
 A robot that is not on the table can choose to ignore the `MOVE`, `LEFT`, `RIGHT` and `REPORT` commands.
 
 <br/>
+
 ## Installation
 
 In the project directory, you can run:
