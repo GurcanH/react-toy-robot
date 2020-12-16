@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   TextField,
   Select,
@@ -13,149 +13,27 @@ import {
 } from '@material-ui/core';
 import ArtTrackIcon from '@material-ui/icons/ArtTrack';
 
-import {
-  NORTH,
-  SOUTH,
-  EAST,
-  WEST,
-  MIN_VALUE,
-  MAX_VALUE
-} from '../../config/constants';
+import { MIN_VALUE, MAX_VALUE } from '../../config/constants';
 import moduleClasses from './MainScreen.module.css';
 import Table from '../Table/Table';
-
-const INITIAL_STATE = {
-  x: '',
-  y: '',
-  f: ''
-};
+import { useRobotHook } from '../../hoc/useRobotHook';
 
 const MainScreen = () => {
-  const [placeValues, setPlaceValues] = useState(INITIAL_STATE);
-  const [robotValues, setRobotValues] = useState(INITIAL_STATE);
-
-  const [showRobot, setShowRobot] = useState(false);
-  const [robotPlaced, setRobotPlaced] = useState(false);
-  const [logs, setLogs] = useState([]);
-
-  const arrayDirections = [NORTH, EAST, SOUTH, WEST];
-
-  ////////////////////////////////
-  ////Robot movement functions///
-  ///////////////////////////////
-  const handleLeftRight = direction => {
-    let newPosition = arrayDirections.indexOf(robotValues.f);
-    newPosition += direction;
-
-    if (newPosition > arrayDirections.length - 1) {
-      newPosition = 0;
-    } else if (newPosition < 0) {
-      newPosition = arrayDirections.length - 1;
-    }
-
-    setRobotValues({ ...robotValues, f: arrayDirections[newPosition] });
-    setShowRobot(false);
-    addLog(`The robot turned to: ${arrayDirections[newPosition]}!`);
-  };
-
-  const addLog = log => {
-    const updatedLogs = [...logs, log];
-    setLogs(updatedLogs);
-  };
-  const handleMove = () => {
-    let { f, x, y } = robotValues;
-
-    setShowRobot(false);
-
-    if (
-      // If the robot needs to move North but it is at the very top
-      // or the robot needs to move South but it is at the very bottom
-      // or the robot needs to move West but it is  at the very left
-      // or the robot needs to move East but it is  at the very right ignore the movement.
-      (f === NORTH && y === MAX_VALUE) ||
-      (f === SOUTH && y === MIN_VALUE) ||
-      (f === WEST && x === MIN_VALUE) ||
-      (f === EAST && x === MAX_VALUE)
-    ) {
-      addLog(
-        `X position: ${x} - Y position: ${y}. The robot CAN'T move to ${f}!`
-      );
-      return;
-    }
-
-    // NORTH
-    if (f === NORTH) y++;
-    // SOUTH
-    if (f === SOUTH) y--;
-    // WEST
-    if (f === WEST) x--;
-    // EAST
-    if (f === EAST) x++;
-
-    // the robot can move, so go
-    addLog(
-      `The robot moved to X position: ${x}, Y position: ${y}, and facing: ${f}!`
-    );
-    setRobotValues({ ...robotValues, x, y });
-  };
-
-  ////////////////////////////////
-  ////Robot placement functions///
-  ///////////////////////////////
-  const handlePlacementXYValues = el => {
-    const { value, id } = el.target;
-
-    if (Number(value) > MAX_VALUE) {
-      el.target.value = MAX_VALUE;
-    }
-    if (Number(value) < MIN_VALUE || isNaN(value) || !value) {
-      el.target.value = MIN_VALUE;
-    }
-
-    if (id === 'xval') {
-      setPlaceValues({ ...placeValues, x: Number(el.target.value) });
-    }
-    if (id === 'yval') {
-      setPlaceValues({ ...placeValues, y: Number(el.target.value) });
-    }
-    setShowRobot(false);
-  };
-
-  // Set the robot's place
-  const handlePlacement = () => {
-    // set robot placement values
-    const { f, x, y } = placeValues;
-    if (!f || !x || !y) {
-      return;
-    }
-    const show = f.length > 0 && x >= MIN_VALUE && y >= MIN_VALUE;
-
-    setRobotPlaced(show);
-    setShowRobot(false);
-    addLog(
-      `The robot has been placed to X position: ${x}, Y position: ${y}, and facing: ${f}!`
-    );
-    // and set the robot position
-    setRobotValues({ ...placeValues, x, y });
-  };
-
-  const handlePlacementFacing = el => {
-    setPlaceValues({ ...placeValues, f: el.target.value });
-    setShowRobot(false);
-  };
-
-  // Show report
-  const handleReport = () => {
-    setShowRobot(true);
-  };
-
-  const handleRefresh = () => {
-    setShowRobot(false);
-    setRobotPlaced(false);
-    setRobotValues(INITIAL_STATE);
-    setPlaceValues(INITIAL_STATE);
-    setLogs([]);
-  };
+  const {
+    placeValues,
+    robotValues,
+    showRobot,
+    robotPlaced,
+    logs,
+    handleLeftRight,
+    handleMove,
+    handlePlacementXYValues,
+    handlePlacement,
+    handlePlacementFacing,
+    handleReport,
+    handleRefresh,
+    arrayDirections
+  } = useRobotHook();
 
   const renderReport = () => {
     return logs.map((log, index) => {
@@ -213,7 +91,7 @@ const MainScreen = () => {
       />
       <div className={moduleClasses.controlsDiv}>
         <div className={moduleClasses.firstControlDiv}>
-          <span>Robot Summon Place: </span>
+          <span className={moduleClasses.span}>Robot Summon Place: </span>
           <TextField
             style={{ marginRight: '15px' }}
             className={moduleClasses.input}
